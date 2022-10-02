@@ -1,0 +1,386 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "version": "1",
+    "title": "Reporting service",
+    "description": "API for the reporting weekly"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/v1/ping": {
+      "get": {
+        "summary": "Check if the service is available",
+        "description": "simple ping return 204",
+        "operationId": "ping",
+        "responses": {
+          "204": {
+            "description": "The service is available"
+          }
+        }
+      }
+    },
+    "/api/v1/jira/{key}": {
+      "get": {
+        "summary": "Find issue in jira by key",
+        "description": "Return a single issue if the key exists in the jira API else return 400.",
+        "operationId": "IssueJira",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "key of issue",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Issue"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/mongodb/{key}": {
+      "get": {
+        "summary": "Find issue in mongodb by key",
+        "description": "Returns a single issue if the key exist in the database mongoDB else return 400.",
+        "operationId": "IssueMongo",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "key of issue",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Issue"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/add/{key}": {
+      "get": {
+        "summary": "Find issue in jira and add to the mongodb",
+        "description": "add a single issue by key. If the key exist in the jira api, add the issue in the database MongoDB else return 400.",
+        "operationId": "Add",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "key of issue",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/delete/{key}": {
+      "get": {
+        "summary": "delete issue to the mongodb",
+        "description": "delete a single issue in the database MongoDB if exist.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "description": "key of issue",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "400": {
+            "description": "bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/all": {
+      "get": {
+        "summary": "return all issues in mongoDB",
+        "description": "returns all issues from the \"issues\" collection in the mongoDB database",
+        "operationId": "All",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Issues"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/history": {
+      "get": {
+        "summary": "return all issues in history",
+        "description": "returns all issues from the \"history\" collection in the mongoDB database",
+        "operationId": "history",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Issues"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/update": {
+      "get": {
+        "summary": "update the history",
+        "description": "copy the collection \"issues\" to the collection \"history\"",
+        "operationId": "update",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/delete": {
+      "get": {
+        "summary": "delete",
+        "description": "delete the collection \"issues\"",
+        "operationId": "delete",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/reset": {
+      "get": {
+        "summary": "reset",
+        "description": "reset the collection \"issues\"",
+        "operationId": "reset",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "500": {
+            "description": "internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Issue": {
+        "type": "object",
+        "properties": {
+          "Project": {
+            "type": "string",
+            "description": "The user ID."
+          },
+          "Key": {
+            "type": "string",
+            "description": "issue key."
+          },
+          "Type": {
+            "type": "string",
+            "description": "issue type."
+          },
+          "Desc": {
+            "type": "string",
+            "description": "summary of issue."
+          },
+          "Assigned": {
+            "type": "string",
+            "description": "people assigned to this issue."
+          },
+          "Date": {
+            "type": "string",
+            "description": "date n°week."
+          }
+        }
+      },
+      "Issues": {
+        "type": "object",
+        "properties": {
+          "Issues": {
+            "$ref": "#/components/schemas/Issue"
+          }
+        }
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "Message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+git+ssh://git@gitlabdev.vadesecure.com/engineering/pyvade.git@fca63335619676f5454155d87d8c679949c0a496

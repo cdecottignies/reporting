@@ -1,0 +1,7 @@
+/build
+/dev
+
+/tests/.pytest_cache
+/tests/__pycache__
+/ui/node_modules
+/conf/jira.pem

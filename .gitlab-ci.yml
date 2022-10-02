@@ -1,0 +1,66 @@
+include:
+  # This template build and do unit tests
+  - project: "open/gitlabci"
+    ref: "master"
+    file: "golang/build.yml"
+
+  # This template make linter and do functional tests
+  - project: "open/gitlabci"
+    ref: "master"
+    file: "python/pyvade.yml"
+
+  # This template build and push to gitlab CI
+  - project: "open/gitlabci"
+    ref: "master"
+    file: "docker/docker.yml"
+
+  # This template make coverage for the project
+  - project: "open/gitlabci"
+    ref: "master"
+    file: "golang/coverage.yml"
+
+  # This template publish and send release email
+  - project: "open/gitlabci"
+    ref: "master"
+    file: "release/publish.yml"
+
+variables:
+  RELEASE_PROJECT_JIRA_GROUP: "ENG"
+  RELEASE_PROJECT_JIRA_VERSION_PREFIX: "eng-"
+  RELEASE_MAIL_SUBJECT_PART: "reporting"
+
+stages:
+  - check
+  - build
+  - docker
+  - test
+  - report
+  - publish
+  - deploy
+
+build:
+  script:
+    - build -built
+  only:
+    - master
+    - tags
+    - merge_requests
+    - /^dev\/\d+\.\d+/
+    - /^\d+_\d+/
+    - /^feat\/.+/
+    - /^bug\/.+/
+  variables:
+    BUILD_ARTIFACT: build
+
+test:functional:
+  artifacts:
+    paths:
+      - build/coverage/*.cov
+    expire_in: 1 day
+
+coverage:
+  only:
+    - master
+    - merge_requests
+  dependencies:
+    - test:functional

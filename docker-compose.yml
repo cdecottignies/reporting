@@ -1,0 +1,35 @@
+version: '3.6'
+
+services:
+  reporting:
+    build:
+      context: .
+      #args:
+        #REPORTING_BIN: build/cmd/reporting/main.test
+
+    depends_on: 
+      - mongodb
+    environment:
+      FUNCTIONAL_TESTS: 1
+    volumes:
+      - coverage:/coverage
+    #command: ["-test.run", "TestRunMain", "-test.coverprofile", "/coverage/functional_tests.cov"]
+    labels:
+      com.dnsdock.alias: reporting.docker
+    networks:
+      - eng_reporting_tests_net
+    ports: 
+      - "8080:8080"
+  mongodb:
+      image: mongo:4.0.10
+      networks:
+        - eng_reporting_tests_net
+      ports: 
+        - "27017:27017"
+networks:
+  eng_reporting_tests_net:
+
+volumes:
+  coverage:
+    name: reporting-coverage
+    
